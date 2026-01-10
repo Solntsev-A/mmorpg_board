@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
+import random
 
 
 class UserManager(BaseUserManager):
@@ -36,3 +38,14 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+
+class EmailConfirmation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='email_confirmations')
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'EmailConfirmation(user={self.user.email}, code={self.code})'
