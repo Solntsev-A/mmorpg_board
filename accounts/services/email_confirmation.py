@@ -10,6 +10,22 @@ from django.conf import settings
 CODE_TTL_MINUTES = 15
 
 
+class EmailConfirmationError(Exception):
+    pass
+
+
+class InvalidConfirmationCode(EmailConfirmationError):
+    pass
+
+
+class ExpiredConfirmationCode(EmailConfirmationError):
+    pass
+
+
+class UsedConfirmationCode(EmailConfirmationError):
+    pass
+
+
 def generate_confirmation_code():
     return f"{random.randint(100000, 999999)}"
 
@@ -40,3 +56,25 @@ def send_confirmation_email(user, confirmation):
         recipient_list=[user.email],
         fail_silently=False,
     )
+
+def confirm_email(code):
+    try:
+        confirmation = EmailConfirmation.objects.select_related('user').get(code=code)
+    except EmailConfirmation.DoesNotExist:
+        raise InvalidConfirmationCode('Неверный код подтверждения')
+
+    if confirmation.is_used:
+        raise UsedConfirmationCode('Код уже был использован')
+
+    if confirmation.expires_at < timezone.now():
+        raise ExpiredConfirmationCode('Срок действия кода истёк')
+
+    user = confirmation.user
+    user.is_active = True
+    user.save(update_fields=['is_active'])
+
+    confirmation.is_used = True
+    confirmation.save(update_fields=['is_used'])
+
+    return user
+
