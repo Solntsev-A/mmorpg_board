@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Отклики на мои объявления</h1>
+
+{% if responses %}
+    <ul>
+        {% for response in responses %}
+            <li>
+                <strong>{{ response.advertisement.title }}</strong><br>
+                От: {{ response.author.email }}<br>
+                {{ response.text }}<br>
+                Статус:
+                {% if response.is_accepted %}
+                    <span style="color: green;">принят</span>
+                {% else %}
+                    <span style="color: orange;">ожидает</span>
+                {% endif %}
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Откликов пока нет.</p>
+{% endif %}
+{% endblock %}

@@ -68,3 +68,17 @@ def accept_response_view(request, pk):
         'board:advertisement_detail',
         pk=response.advertisement.pk
     )
+
+
+class MyAdvertisementResponsesView(LoginRequiredMixin, ListView):
+    model = Response
+    template_name = 'board/my_responses.html'
+    context_object_name = 'responses'
+
+    def get_queryset(self):
+        return (
+            Response.objects
+            .filter(advertisement__author=self.request.user)
+            .select_related('advertisement', 'author')
+            .order_by('-created_at')
+        )
