@@ -1,27 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from board.models import Advertisement, Response
+from board.models import Advertisement
 from django.views.generic import ListView, DetailView
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 from .forms import ResponseForm
 from .models import Response
 from .services.responses import create_response, accept_response, delete_response
-
-
-def advertisement_list(request):
-    advertisements = Advertisement.objects.select_related('category', 'author').order_by('-created_at')
-
-    return render(
-        request,
-        'board/advertisement_list.html',
-        {
-            'advertisements': advertisements,
-        }
-    )
 
 
 class AdvertisementListView(ListView):
@@ -38,7 +24,6 @@ class AdvertisementDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ResponseForm()
-        context['responses'] = (self.object.responses.select_related('author').order_by('-created_at'))
         return context
 
     def post(self, request, *args, **kwargs):
