@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 User = settings.AUTH_USER_MODEL
@@ -16,7 +17,7 @@ class Advertisement(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='advertisements')
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='advertisements')
     title = models.CharField(max_length=200)
-    content = models.TextField()
+    content = RichTextUploadingField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
