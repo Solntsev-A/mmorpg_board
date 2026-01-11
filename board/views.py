@@ -5,6 +5,7 @@ from board.models import Advertisement, Response
 from django.views.generic import ListView, DetailView
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 from .forms import ResponseForm
 from .models import Response
@@ -58,31 +59,27 @@ class AdvertisementDetailView(DetailView):
 
 
 @login_required
+@require_POST
 def accept_response_view(request, pk):
     response = get_object_or_404(Response, pk=pk)
 
-    try:
-        accept_response(
-            response=response,
-            user=request.user
-        )
-    except PermissionDenied:
-        raise
+    accept_response(
+        response=response,
+        user=request.user
+    )
 
     return redirect('board:my_responses')
 
 
 @login_required
+@require_POST
 def delete_response_view(request, pk):
     response = get_object_or_404(Response, pk=pk)
 
-    try:
-        delete_response(
-            response=response,
-            user=request.user
-        )
-    except PermissionDenied:
-        raise
+    delete_response(
+        response=response,
+        user=request.user
+    )
 
     return redirect('board:my_responses')
 

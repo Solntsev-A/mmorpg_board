@@ -14,15 +14,16 @@
                 {% if response.is_accepted %}
                     <span style="color: green;">Принят</span>
                 {% else %}
-                    <a href="{% url 'board:accept_response' response.pk %}">
-                        Принять
-                    </a>
+                    <form method="post" action="{% url 'board:accept_response' response.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Принять</button>
+                    </form>
                 {% endif %}
 
-                |
-                <a href="{% url 'board:delete_response' response.pk %}">
-                    Удалить
-                </a>
+                <form method="post" action="{% url 'board:delete_response' response.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Удалить</button>
+                </form>
             </li>
             <hr>
         {% endfor %}
