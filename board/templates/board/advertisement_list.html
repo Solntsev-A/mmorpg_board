@@ -3,5 +3,28 @@
 {% block title %}Объявления{% endblock %}
 
 {% block content %}
-<h1>Объявления</h1>
+<h1 class="mb-4">Объявления</h1>
+
+{% if advertisements %}
+    <div class="row">
+        {% for ad in advertisements %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ad.title }}</h5>
+                        <p class="card-text">
+                            {{ ad.text|truncatechars:120 }}
+                        </p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Категория: {{ ad.category.name }}<br>
+                        Автор: {{ ad.author.email }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Объявлений пока нет.</p>
+{% endif %}
 {% endblock %}
