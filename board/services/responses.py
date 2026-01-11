@@ -60,7 +60,6 @@ def accept_response(*, response, user):
     return response
 
 def delete_response(*, response, user):
-    # Проверяем, что пользователь — автор объявления
     if response.advertisement.author != user:
         raise PermissionDenied(
             'Вы не можете удалить этот отклик'
