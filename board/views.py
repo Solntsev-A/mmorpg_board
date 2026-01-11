@@ -1,10 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
-from board.models import Advertisement
+from django.shortcuts import render, redirect, get_object_or_404
+from board.models import Advertisement, Response
 from django.views.generic import ListView, DetailView
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 
 from .forms import ResponseForm
-from .services.responses import create_response
+from .models import Response
+from .services.responses import create_response, accept_response
 
 
 def advertisement_list(request):
@@ -33,6 +36,7 @@ class AdvertisementDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ResponseForm()
+        context['responses'] = (self.object.responses.select_related('author').order_by('-created_at'))
         return context
 
     def post(self, request, *args, **kwargs):
@@ -50,3 +54,17 @@ class AdvertisementDetailView(DetailView):
         context = self.get_context_data()
         context['form'] = form
         return self.render_to_response(context)
+
+@login_required
+def accept_response_view(request, pk):
+    response = get_object_or_404(Response, pk=pk)
+
+    accept_response(
+        response=response,
+        user=request.user
+    )
+
+    return redirect(
+        'board:advertisement_detail',
+        pk=response.advertisement.pk
+    )

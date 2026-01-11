@@ -20,33 +20,36 @@
     </div>
 </div>
 <div class="mt-5">
-    <h4>Оставить отклик</h4>
+    <h4>Отклики</h4>
 
-    {% if user.is_authenticated %}
-        <form method="post">
-            {% csrf_token %}
+    {% if responses %}
+        <ul class="list-group">
+            {% for response in responses %}
+                <li class="list-group-item">
+                    <p class="mb-1">
+                        <strong>{{ response.author.email }}</strong>
+                    </p>
 
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
+                    <p>{{ response.text|linebreaks }}</p>
 
-            <div class="mb-3">
-                {{ form.text }}
-                {% for error in form.text.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+                    {% if response.is_accepted %}
+                        <span class="badge bg-success">Принят</span>
+                    {% endif %}
 
-            <button type="submit" class="btn btn-primary">
-                Отправить отклик
-            </button>
-        </form>
+                    {% if user == advertisement.author and not response.is_accepted %}
+                        <form method="post"
+                              action="{% url 'board:accept_response' response.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-success mt-2">
+                                Принять отклик
+                            </button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
     {% else %}
-        <p>
-            <a href="#">Войдите</a>, чтобы оставить отклик.
-        </p>
+        <p class="text-muted">Откликов пока нет.</p>
     {% endif %}
 </div>
 {% endblock %}
