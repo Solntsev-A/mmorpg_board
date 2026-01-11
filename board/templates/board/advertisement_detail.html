@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ advertisement.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title">{{ advertisement.title }}</h1>
+
+        <p class="text-muted">
+            Категория: {{ advertisement.category.name }} |
+            Автор: {{ advertisement.author.email }}
+        </p>
+
+        <hr>
+
+        <div class="card-text">
+            {{ advertisement.text|linebreaks }}
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h4>Отклики</h4>
+    <p class="text-muted">Здесь скоро будут отклики 👀</p>
+</div>
+{% endblock %}
