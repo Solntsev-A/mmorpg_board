@@ -2,23 +2,47 @@
     <div class="sidebar-heading border-bottom bg-light">
         MMORPG Board
     </div>
+
     <div class="list-group list-group-flush">
 
-        <a class="list-group-item list-group-item-action p-3" href="{% url 'board:advertisement_list' %}">
+        <!-- Доступно всем -->
+        <a class="list-group-item list-group-item-action p-3"
+           href="{% url 'board:advertisement_list' %}">
             Все объявления
         </a>
 
-        <a class="list-group-item list-group-item-action p-3" href="#">
-            Мои объявления
-        </a>
+        {% if user.is_authenticated %}
 
-        <a class="list-group-item list-group-item-action p-3" href="{% url 'board:my_responses' %}">
-            Отклики
-        </a>
+            <!-- Только для авторизованных -->
+            <a class="list-group-item list-group-item-action p-3"
+               href="{% url 'board:my_advertisements' %}">
+                Мои объявления
+            </a>
 
-        <a class="list-group-item list-group-item-action p-3" href="#">
-            Войти
-        </a>
+            <a class="list-group-item list-group-item-action p-3"
+               href="{% url 'board:my_responses' %}">
+                Отклики
+            </a>
+
+            <a class="list-group-item list-group-item-action p-3 text-danger"
+               href="{% url 'accounts:logout' %}">
+                Выйти
+            </a>
+
+        {% else %}
+
+            <!-- Только для гостей -->
+            <a class="list-group-item list-group-item-action p-3"
+               href="{% url 'accounts:login' %}">
+                Войти
+            </a>
+
+            <a class="list-group-item list-group-item-action p-3"
+               href="{% url 'accounts:register' %}">
+                Регистрация
+            </a>
+
+        {% endif %}
 
     </div>
 </div>

@@ -96,3 +96,17 @@ class MyAdvertisementResponsesView(LoginRequiredMixin, ListView):
         )
         context['selected_advertisement'] = self.request.GET.get('advertisement')
         return context
+
+
+class MyAdvertisementsView(LoginRequiredMixin, ListView):
+    model = Advertisement
+    template_name = 'board/my_advertisements.html'
+    context_object_name = 'advertisements'
+
+    def get_queryset(self):
+        return (
+            Advertisement.objects
+            .filter(author=self.request.user)
+            .select_related('category')
+            .order_by('-created_at')
+        )

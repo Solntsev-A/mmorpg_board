@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Мои объявления</h1>
+
+{% if advertisements %}
+    <div class="list-group">
+        {% for ad in advertisements %}
+            <a href="{% url 'board:advertisement_detail' ad.pk %}"
+               class="list-group-item list-group-item-action">
+                <h5 class="mb-1">{{ ad.title }}</h5>
+                <small class="text-muted">
+                    {{ ad.category.name }} · {{ ad.created_at|date:"d.m.Y" }}
+                </small>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">У вас пока нет объявлений.</p>
+{% endif %}
+{% endblock %}

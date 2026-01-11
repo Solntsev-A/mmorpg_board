@@ -157,3 +157,7 @@ CKEDITOR_CONFIGS = {
         'extraAllowedContent': 'iframe[*]',
     }
 }
+
+LOGIN_REDIRECT_URL = 'board:advertisement_list'
+LOGOUT_REDIRECT_URL = 'board:advertisement_list'
+LOGIN_URL = 'accounts:login'
