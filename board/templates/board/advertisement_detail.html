@@ -19,37 +19,19 @@
         </div>
     </div>
 </div>
-<div class="mt-5">
-    <h4>Отклики</h4>
 
-    {% if responses %}
-        <ul class="list-group">
-            {% for response in responses %}
-                <li class="list-group-item">
-                    <p class="mb-1">
-                        <strong>{{ response.author.email }}</strong>
-                    </p>
+{% if user.is_authenticated and user != advertisement.author %}
+    <div class="mt-5">
+        <h4>Оставить отклик</h4>
 
-                    <p>{{ response.text|linebreaks }}</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-                    {% if response.is_accepted %}
-                        <span class="badge bg-success">Принят</span>
-                    {% endif %}
-
-                    {% if user == advertisement.author and not response.is_accepted %}
-                        <form method="post"
-                              action="{% url 'board:accept_response' response.pk %}">
-                            {% csrf_token %}
-                            <button class="btn btn-sm btn-outline-success mt-2">
-                                Принять отклик
-                            </button>
-                        </form>
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="text-muted">Откликов пока нет.</p>
-    {% endif %}
-</div>
+            <button class="btn btn-primary mt-2">
+                Отправить отклик
+            </button>
+        </form>
+    </div>
+{% endif %}
 {% endblock %}
