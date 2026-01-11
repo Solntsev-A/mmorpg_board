@@ -3,6 +3,30 @@
 {% block content %}
 <h1>Отклики на мои объявления</h1>
 
+<form method="get" class="mb-4">
+    <label for="advertisement" class="form-label">
+        Фильтр по объявлению
+    </label>
+
+    <select name="advertisement"
+            id="advertisement"
+            class="form-select"
+            onchange="this.form.submit()">
+
+        <option value="">Все объявления</option>
+
+        {% for ad in advertisements %}
+            <option value="{{ ad.id }}"
+                {% if selected_advertisement == ad.id|stringformat:"s" %}
+                    selected
+                {% endif %}
+            >
+                {{ ad.title }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
 {% if responses %}
     <ul>
         {% for response in responses %}

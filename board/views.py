@@ -75,9 +75,24 @@ class MyAdvertisementResponsesView(LoginRequiredMixin, ListView):
     context_object_name = 'responses'
 
     def get_queryset(self):
-        return (
+        queryset = (
             Response.objects
             .filter(advertisement__author=self.request.user)
             .select_related('advertisement', 'author')
             .order_by('-created_at')
         )
+
+        advertisement_id = self.request.GET.get('advertisement')
+
+        if advertisement_id:
+            queryset = queryset.filter(advertisement_id=advertisement_id)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['advertisements'] = Advertisement.objects.filter(
+            author=self.request.user
+        )
+        context['selected_advertisement'] = self.request.GET.get('advertisement')
+        return context
