@@ -27,25 +27,32 @@
     </select>
 </form>
 {% if responses %}
-    <ul>
+    <ul class="list-group">
         {% for response in responses %}
-            <li>
+            <li class="list-group-item mb-2">
                 <strong>{{ response.advertisement.title }}</strong><br>
                 От: {{ response.author.email }}<br>
                 {{ response.text }}<br>
-
                 {% if response.is_accepted %}
-                    <span style="color: green;">Принят</span>
+                    <span class="badge bg-success">Принят</span>
                 {% else %}
-                    <form method="post" action="{% url 'board:accept_response' response.pk %}" style="display:inline;">
+                    <span class="badge bg-secondary">Ожидает</span>
+                    <form method="post"
+                          action="{% url 'board:accept_response' response.pk %}"
+                          style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit">Принять</button>
+                        <button type="submit" class="btn btn-sm btn-outline-success">
+                            Принять
+                        </button>
                     </form>
                 {% endif %}
-
-                <form method="post" action="{% url 'board:delete_response' response.pk %}" style="display:inline;">
+                <form method="post"
+                      action="{% url 'board:delete_response' response.pk %}"
+                      style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit">Удалить</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        Удалить
+                    </button>
                 </form>
             </li>
             <hr>
