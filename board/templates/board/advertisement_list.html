@@ -1,23 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Доска объявлений</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block title %}Объявления{% endblock %}
+
+{% block content %}
 <h1>Объявления</h1>
-
-{% for ad in advertisements %}
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-        <h2>{{ ad.title }}</h2>
-        <p><strong>Категория:</strong> {{ ad.category.name }}</p>
-        <p>{{ ad.content|linebreaks }}</p>
-        <p><em>Автор: {{ ad.author.email }}</em></p>
-    </div>
-{% empty %}
-    <p>Пока объявлений нет.</p>
-{% endfor %}
-
-</body>
-</html>
+{% endblock %}
