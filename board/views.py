@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from board.models import Advertisement, Response
 from django.views.generic import ListView, DetailView
@@ -7,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import ResponseForm
 from .models import Response
-from .services.responses import create_response, accept_response
+from .services.responses import create_response, accept_response, delete_response
 
 
 def advertisement_list(request):
@@ -55,19 +56,35 @@ class AdvertisementDetailView(DetailView):
         context['form'] = form
         return self.render_to_response(context)
 
+
 @login_required
 def accept_response_view(request, pk):
     response = get_object_or_404(Response, pk=pk)
 
-    accept_response(
-        response=response,
-        user=request.user
-    )
+    try:
+        accept_response(
+            response=response,
+            user=request.user
+        )
+    except PermissionDenied:
+        raise
 
-    return redirect(
-        'board:advertisement_detail',
-        pk=response.advertisement.pk
-    )
+    return redirect('board:my_responses')
+
+
+@login_required
+def delete_response_view(request, pk):
+    response = get_object_or_404(Response, pk=pk)
+
+    try:
+        delete_response(
+            response=response,
+            user=request.user
+        )
+    except PermissionDenied:
+        raise
+
+    return redirect('board:my_responses')
 
 
 class MyAdvertisementResponsesView(LoginRequiredMixin, ListView):

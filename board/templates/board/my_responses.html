@@ -10,12 +10,19 @@
                 <strong>{{ response.advertisement.title }}</strong><br>
                 От: {{ response.author.email }}<br>
                 {{ response.text }}<br>
-                Статус:
+
                 {% if response.is_accepted %}
-                    <span style="color: green;">принят</span>
+                    <span style="color: green;">Принят</span>
                 {% else %}
-                    <span style="color: orange;">ожидает</span>
+                    <a href="{% url 'board:accept_response' response.pk %}">
+                        Принять
+                    </a>
                 {% endif %}
+
+                |
+                <a href="{% url 'board:delete_response' response.pk %}">
+                    Удалить
+                </a>
             </li>
             <hr>
         {% endfor %}
