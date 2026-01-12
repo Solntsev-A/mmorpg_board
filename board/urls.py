@@ -5,7 +5,9 @@ from board.views import (AdvertisementDetailView,
                          accept_response_view,
                          delete_response_view,
                          MyAdvertisementsView,
-                         AdvertisementCreateView
+                         AdvertisementCreateView,
+                         AdvertisementUpdateView,
+                         AdvertisementDeleteView
                          )
 
 app_name = 'board'
@@ -18,4 +20,6 @@ urlpatterns = [
     path('responses/<int:pk>/delete/', delete_response_view, name='delete_response'),
     path('my-advertisements/', MyAdvertisementsView.as_view(), name='my_advertisements'),
     path('advertisements/create/', AdvertisementCreateView.as_view(), name='advertisement_create'),
+    path('advertisements/<int:pk>/edit/', AdvertisementUpdateView.as_view(), name='advertisement_edit'),
+    path('advertisements/<int:pk>/delete/', AdvertisementDeleteView.as_view(), name='advertisement_delete'),
 ]

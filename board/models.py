@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.urls import reverse
 
 
 User = settings.AUTH_USER_MODEL
@@ -23,6 +24,12 @@ class Advertisement(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse(
+            'board:advertisement_detail',
+            kwargs={'pk': self.pk}
+        )
 
 
 class Response(models.Model):

@@ -6,6 +6,19 @@
 <div class="card">
     <div class="card-body">
         <h1 class="card-title">{{ advertisement.title }}</h1>
+        {% if user == advertisement.author %}
+            <div class="mb-3">
+                <a class="btn btn-sm btn-outline-primary"
+                   href="{% url 'board:advertisement_edit' advertisement.pk %}">
+                    Редактировать
+                </a>
+
+                <a class="btn btn-sm btn-outline-danger"
+                   href="{% url 'board:advertisement_delete' advertisement.pk %}">
+                    Удалить
+                </a>
+            </div>
+        {% endif %}
 
         <p class="text-muted">
             Категория: {{ advertisement.category.name }} |

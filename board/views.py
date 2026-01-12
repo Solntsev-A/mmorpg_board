@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from board.models import Advertisement
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.urls import reverse_lazy
+from django.core.exceptions import PermissionDenied
 
 from .forms import ResponseForm, AdvertisementForm
 from .models import Response
@@ -122,3 +123,21 @@ class AdvertisementCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class AdvertisementUpdateView(LoginRequiredMixin, UpdateView):
+    model = Advertisement
+    form_class = AdvertisementForm
+    template_name = 'board/advertisement_form.html'
+
+    def get_queryset(self):
+        return Advertisement.objects.filter(author=self.request.user)
+
+
+class AdvertisementDeleteView(LoginRequiredMixin, DeleteView):
+    model = Advertisement
+    template_name = 'board/advertisement_confirm_delete.html'
+    success_url = reverse_lazy('board:advertisement_list')
+
+    def get_queryset(self):
+        return Advertisement.objects.filter(author=self.request.user)
