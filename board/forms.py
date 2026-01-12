@@ -1,5 +1,6 @@
 from django import forms
-from .models import Response
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from .models import Response, Advertisement
 
 
 class ResponseForm(forms.ModelForm):
@@ -13,3 +14,13 @@ class ResponseForm(forms.ModelForm):
                 'placeholder': 'Введите текст отклика...',
             })
         }
+
+
+class AdvertisementForm(forms.ModelForm):
+    content = forms.CharField(
+        widget=CKEditorUploadingWidget()
+    )
+
+    class Meta:
+        model = Advertisement
+        fields = ['title', 'category', 'content']

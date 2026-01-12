@@ -1,11 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from board.models import Advertisement
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.urls import reverse_lazy
 
-from .forms import ResponseForm
+from .forms import ResponseForm, AdvertisementForm
 from .models import Response
 from .services.responses import create_response, accept_response, delete_response
 
@@ -110,3 +111,14 @@ class MyAdvertisementsView(LoginRequiredMixin, ListView):
             .select_related('category')
             .order_by('-created_at')
         )
+
+
+class AdvertisementCreateView(LoginRequiredMixin, CreateView):
+    model = Advertisement
+    form_class = AdvertisementForm
+    template_name = 'board/advertisement_create.html'
+    success_url = reverse_lazy('board:advertisement_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
